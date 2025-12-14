@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=1 GOOS=linux go build -o /app/substrack ./...
+RUN CGO_ENABLED=1 GOOS=linux go build -o /app/substrack .
 
 FROM debian:bookworm-slim
 
