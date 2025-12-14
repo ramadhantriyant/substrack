@@ -14,9 +14,3 @@ func Chain(handler http.Handler, middlewares ...Middleware) http.Handler {
 	}
 	return handler
 }
-
-// Protected wraps a handler function with authentication middleware
-// This is a helper to make it easier to protect individual routes
-func Protected(handlerFunc http.HandlerFunc) http.Handler {
-	return Authentication(handlerFunc)
-}

@@ -1,0 +1,17 @@
+.git
+.gitignore
+.DS_Store
+
+Dockerfile
+docker-compose.yml
+
+bin
+tmp
+coverage
+*.log
+
+data
+*.db
+
+.vscode
+.idea
