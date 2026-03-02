@@ -33,7 +33,7 @@ func createServer(config *models.AppConfig, port string) *http.Server {
 	mux.HandleFunc("GET /api/subscription", h.ListSubscription)
 	mux.HandleFunc("GET /api/subscription/active", h.ListActiveSubscription)
 	mux.HandleFunc("GET /api/subscription/expired", h.ListExpiredSubscription)
-	mux.HandleFunc("GET /api/subscribtion/cycle/{billCycle}", h.ListSubscriptionsByBillingCycle)
+	mux.HandleFunc("GET /api/subscription/cycle/{billCycle}", h.ListSubscriptionsByBillingCycle)
 	mux.HandleFunc("GET /api/subscription/{id}", h.GetSubscription)
 	mux.HandleFunc("POST /api/subscription", h.CreateSubscription)
 	mux.HandleFunc("PUT /api/subscription/{id}", h.UpdateSubscription)
@@ -41,6 +41,10 @@ func createServer(config *models.AppConfig, port string) *http.Server {
 	mux.HandleFunc("PUT /api/subscription/{id}/cost", h.UpdateSubscriptionCost)
 	mux.HandleFunc("PATCH /api/subscription/{id}/pause", h.PauseSubscription)
 	mux.HandleFunc("DELETE /api/subscription/{id}", h.DeleteSubscription)
+
+	// User
+	mux.HandleFunc("POST /auth/login", h.Login)
+	mux.HandleFunc("POST /auth/register", h.Register)
 
 	handler := middlewares.Chain(mux, middlewares.Logger, middlewares.CORS, middlewares.ShouldJSON)
 	log.Printf("listening to port 0.0.0.0%s", port)

@@ -11,20 +11,34 @@ import (
 
 type Querier interface {
 	ActivateSubscription(ctx context.Context, id int64) (Subscription, error)
+	AddCategoryToUser(ctx context.Context, arg AddCategoryToUserParams) (UsersCategory, error)
+	AddSubscriptionToUser(ctx context.Context, arg AddSubscriptionToUserParams) (UsersSubscription, error)
 	CalculateTotalMonthlyCost(ctx context.Context, currency *string) (*float64, error)
 	CalculateTotalYearlyCost(ctx context.Context, currency *string) (*float64, error)
+	CalculateUserTotalMonthlyCost(ctx context.Context, arg CalculateUserTotalMonthlyCostParams) (*float64, error)
+	CalculateUserTotalYearlyCost(ctx context.Context, arg CalculateUserTotalYearlyCostParams) (*float64, error)
 	CancelSubscription(ctx context.Context, id int64) (Subscription, error)
 	CategoryExists(ctx context.Context, id int64) (int64, error)
 	CategoryExistsByName(ctx context.Context, name string) (int64, error)
 	CountCategories(ctx context.Context) (int64, error)
+	CountCategoriesByUser(ctx context.Context, userID int64) (int64, error)
 	CountSubscriptions(ctx context.Context) (int64, error)
 	CountSubscriptionsByCategory(ctx context.Context, categoryID int64) (int64, error)
 	CountSubscriptionsByStatus(ctx context.Context, status *string) (int64, error)
+	CountSubscriptionsByUser(ctx context.Context, userID int64) (int64, error)
+	CountUserCategories(ctx context.Context) (int64, error)
+	CountUserSubscriptions(ctx context.Context) (int64, error)
+	CountUsers(ctx context.Context) (int64, error)
+	CountUsersByCategory(ctx context.Context, categoryID int64) (int64, error)
+	CountUsersBySubscription(ctx context.Context, subscriptionID int64) (int64, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
 	CreateSubscription(ctx context.Context, arg CreateSubscriptionParams) (Subscription, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteCategory(ctx context.Context, id int64) error
 	DeleteCategoryByName(ctx context.Context, name string) error
 	DeleteSubscription(ctx context.Context, id int64) error
+	DeleteUser(ctx context.Context, id int64) error
+	DeleteUserByEmail(ctx context.Context, email string) error
 	GetCategoriesCreatedAfter(ctx context.Context, createdAt *time.Time) ([]Category, error)
 	GetCategoriesUpdatedAfter(ctx context.Context, updatedAt *time.Time) ([]Category, error)
 	GetCategory(ctx context.Context, id int64) (Category, error)
@@ -40,18 +54,48 @@ type Querier interface {
 	GetSubscriptionsDueForRenewal(ctx context.Context, nextBillingDate time.Time) ([]Subscription, error)
 	GetSubscriptionsWithReminders(ctx context.Context, nextBillingDate time.Time) ([]Subscription, error)
 	GetUpcomingRenewals(ctx context.Context, dollar_1 *string) ([]Subscription, error)
+	GetUser(ctx context.Context, id int64) (User, error)
+	GetUserActiveSubscriptions(ctx context.Context, userID int64) ([]Subscription, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
+	GetUserCategoriesCreatedAfter(ctx context.Context, createdAt *time.Time) ([]UsersCategory, error)
+	GetUserCategoriesWithDetails(ctx context.Context, userID int64) ([]GetUserCategoriesWithDetailsRow, error)
+	GetUserCategory(ctx context.Context, id int64) (UsersCategory, error)
+	GetUserSubscription(ctx context.Context, id int64) (UsersSubscription, error)
+	GetUserSubscriptionsByCategory(ctx context.Context, arg GetUserSubscriptionsByCategoryParams) ([]Subscription, error)
+	GetUserSubscriptionsCreatedAfter(ctx context.Context, createdAt *time.Time) ([]UsersSubscription, error)
+	GetUserSubscriptionsWithDetails(ctx context.Context, userID int64) ([]GetUserSubscriptionsWithDetailsRow, error)
+	GetUserUpcomingRenewals(ctx context.Context, arg GetUserUpcomingRenewalsParams) ([]Subscription, error)
+	GetUsersCreatedAfter(ctx context.Context, createdAt *time.Time) ([]User, error)
+	GetUsersUpdatedAfter(ctx context.Context, updatedAt *time.Time) ([]User, error)
 	ListActiveSubscriptions(ctx context.Context) ([]Subscription, error)
 	ListCategories(ctx context.Context) ([]Category, error)
+	ListCategoriesByUser(ctx context.Context, userID int64) ([]Category, error)
 	ListCategoriesWithLimit(ctx context.Context, arg ListCategoriesWithLimitParams) ([]Category, error)
 	ListSubscriptions(ctx context.Context) ([]Subscription, error)
 	ListSubscriptionsByBillingCycle(ctx context.Context, billingCycle string) ([]Subscription, error)
 	ListSubscriptionsByCategory(ctx context.Context, categoryID int64) ([]Subscription, error)
 	ListSubscriptionsByStatus(ctx context.Context, status *string) ([]Subscription, error)
+	ListSubscriptionsByUser(ctx context.Context, userID int64) ([]Subscription, error)
 	ListSubscriptionsWithCategories(ctx context.Context) ([]ListSubscriptionsWithCategoriesRow, error)
 	ListSubscriptionsWithLimit(ctx context.Context, arg ListSubscriptionsWithLimitParams) ([]Subscription, error)
+	ListUserCategories(ctx context.Context) ([]UsersCategory, error)
+	ListUserSubscriptions(ctx context.Context) ([]UsersSubscription, error)
+	ListUsers(ctx context.Context) ([]User, error)
+	ListUsersByCategory(ctx context.Context, categoryID int64) ([]User, error)
+	ListUsersBySubscription(ctx context.Context, subscriptionID int64) ([]User, error)
+	ListUsersWithLimit(ctx context.Context, arg ListUsersWithLimitParams) ([]User, error)
 	PauseSubscription(ctx context.Context, id int64) (Subscription, error)
+	RemoveAllCategoriesFromUser(ctx context.Context, userID int64) error
+	RemoveAllSubscriptionsFromUser(ctx context.Context, userID int64) error
+	RemoveAllUsersFromCategory(ctx context.Context, categoryID int64) error
+	RemoveAllUsersFromSubscription(ctx context.Context, subscriptionID int64) error
+	RemoveCategoryFromUser(ctx context.Context, arg RemoveCategoryFromUserParams) error
+	RemoveSubscriptionFromUser(ctx context.Context, arg RemoveSubscriptionFromUserParams) error
+	RemoveUserCategory(ctx context.Context, id int64) error
+	RemoveUserSubscription(ctx context.Context, id int64) error
 	SearchCategories(ctx context.Context, arg SearchCategoriesParams) ([]Category, error)
 	SearchSubscriptions(ctx context.Context, arg SearchSubscriptionsParams) ([]Subscription, error)
+	SearchUsers(ctx context.Context, arg SearchUsersParams) ([]User, error)
 	SubscriptionExists(ctx context.Context, id int64) (int64, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
 	UpdateCategoryDescription(ctx context.Context, arg UpdateCategoryDescriptionParams) (Category, error)
@@ -61,6 +105,14 @@ type Querier interface {
 	UpdateSubscriptionNextBillingDate(ctx context.Context, arg UpdateSubscriptionNextBillingDateParams) (Subscription, error)
 	UpdateSubscriptionReminder(ctx context.Context, arg UpdateSubscriptionReminderParams) (Subscription, error)
 	UpdateSubscriptionStatus(ctx context.Context, arg UpdateSubscriptionStatusParams) (Subscription, error)
+	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
+	UpdateUserEmail(ctx context.Context, arg UpdateUserEmailParams) (User, error)
+	UpdateUserName(ctx context.Context, arg UpdateUserNameParams) (User, error)
+	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error)
+	UserExists(ctx context.Context, id int64) (int64, error)
+	UserExistsByEmail(ctx context.Context, email string) (int64, error)
+	UserHasCategory(ctx context.Context, arg UserHasCategoryParams) (int64, error)
+	UserHasSubscription(ctx context.Context, arg UserHasSubscriptionParams) (int64, error)
 }
 
 var _ Querier = (*Queries)(nil)

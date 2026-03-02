@@ -36,3 +36,28 @@ type Subscription struct {
 	CreatedAt          *time.Time `json:"created_at"`
 	UpdatedAt          *time.Time `json:"updated_at"`
 }
+
+type User struct {
+	ID        int64      `json:"id"`
+	Email     string     `json:"email"`
+	Password  string     `json:"password"`
+	Name      string     `json:"name"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
+type UsersCategory struct {
+	ID         int64      `json:"id"`
+	UserID     int64      `json:"user_id"`
+	CategoryID int64      `json:"category_id"`
+	CreatedAt  *time.Time `json:"created_at"`
+	UpdatedAt  *time.Time `json:"updated_at"`
+}
+
+type UsersSubscription struct {
+	ID             int64      `json:"id"`
+	UserID         int64      `json:"user_id"`
+	SubscriptionID int64      `json:"subscription_id"`
+	CreatedAt      *time.Time `json:"created_at"`
+	UpdatedAt      *time.Time `json:"updated_at"`
+}
