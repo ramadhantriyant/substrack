@@ -42,9 +42,27 @@ func createServer(config *models.AppConfig, port string) *http.Server {
 	mux.HandleFunc("PATCH /api/subscription/{id}/pause", h.PauseSubscription)
 	mux.HandleFunc("DELETE /api/subscription/{id}", h.DeleteSubscription)
 
-	// User
-	mux.HandleFunc("POST /auth/login", h.Login)
+	// Auth (public)
 	mux.HandleFunc("POST /auth/register", h.Register)
+	mux.HandleFunc("POST /auth/login", h.Login)
+	mux.HandleFunc("POST /auth/refresh", h.RefreshToken)
+
+	// Protected routes — all handlers here require a valid Bearer JWT
+	protectedMux := http.NewServeMux()
+	protectedMux.HandleFunc("POST /auth/logout", h.Logout)
+	protectedMux.HandleFunc("GET /api/user/me", h.GetMe)
+	protectedMux.HandleFunc("PUT /api/user/me", h.UpdateMe)
+	protectedMux.HandleFunc("PUT /api/user/me/password", h.UpdatePassword)
+	protectedMux.HandleFunc("DELETE /api/user/me", h.DeleteMe)
+	protectedMux.HandleFunc("GET /api/user/me/subscription", h.ListUserSubscriptions)
+	protectedMux.HandleFunc("POST /api/user/me/subscription/{id}", h.AddUserSubscription)
+	protectedMux.HandleFunc("DELETE /api/user/me/subscription/{id}", h.RemoveUserSubscription)
+	protectedMux.HandleFunc("GET /api/user/me/category", h.ListUserCategories)
+	protectedMux.HandleFunc("POST /api/user/me/category/{id}", h.AddUserCategory)
+	protectedMux.HandleFunc("DELETE /api/user/me/category/{id}", h.RemoveUserCategory)
+
+	// Mount protected mux last so explicit public routes take priority
+	mux.Handle("/", middlewares.RequireAuth(config.JWTSecret)(protectedMux))
 
 	handler := middlewares.Chain(mux, middlewares.Logger, middlewares.CORS, middlewares.ShouldJSON)
 	log.Printf("listening to port 0.0.0.0%s", port)
