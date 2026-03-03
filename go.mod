@@ -1,6 +1,6 @@
 module git.ramadhantriyant.id/ramadhantriyant/substrack
 
-go 1.24.7
+go 1.26
 
 require (
 	github.com/alexedwards/argon2id v1.0.0
