@@ -7,6 +7,7 @@ import (
 )
 
 type AppConfig struct {
-	DB      *sql.DB
-	Queries *database.Queries
+	DB        *sql.DB
+	Queries   *database.Queries
+	JWTSecret string
 }

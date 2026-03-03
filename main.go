@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"log"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -37,9 +38,15 @@ func main() {
 	log.Println("Migrations complete")
 	log.Printf("Database initialized in %s", dbPath)
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET environment variable is required")
+	}
+
 	config := &models.AppConfig{
-		DB:      db,
-		Queries: database.New(db),
+		DB:        db,
+		Queries:   database.New(db),
+		JWTSecret: jwtSecret,
 	}
 	server := createServer(config, port)
 
