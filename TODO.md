@@ -1,9 +1,5 @@
 # Substrack TODO
 
-## User-scoped resources
-- [ ] Scope subscription endpoints to the authenticated user
-- [ ] Scope category endpoints to the authenticated user
-
 ## Done
 - [x] Categories CRUD
 - [x] Subscriptions CRUD
@@ -28,3 +24,4 @@
 - [x] `GET /api/user/me/category`
 - [x] `POST /api/user/me/category/{id}`
 - [x] `DELETE /api/user/me/category/{id}`
+- [x] Scope subscription and category endpoints to authenticated users

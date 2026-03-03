@@ -19,29 +19,6 @@ func createServer(config *models.AppConfig, port string) *http.Server {
 	mux := http.NewServeMux()
 	h := handlers.New(config)
 
-	// Category
-	mux.HandleFunc("GET /api/category", h.ListCategory)
-	mux.HandleFunc("GET /api/category/id/{id}", h.GetCategoryByID)
-	mux.HandleFunc("GET /api/category/name/{name}", h.GetCategoryByName)
-	mux.HandleFunc("POST /api/category", h.CreateCategory)
-	mux.HandleFunc("PUT /api/category/{id}", h.UpdateCategory)
-	mux.HandleFunc("PUT /api/category/{id}/name", h.UpdateCategoryName)
-	mux.HandleFunc("PUT /api/category/{id}/description", h.UpdateCategoryDescription)
-	mux.HandleFunc("DELETE /api/category/{id}", h.DeleteCategory)
-
-	// Subscriptions
-	mux.HandleFunc("GET /api/subscription", h.ListSubscription)
-	mux.HandleFunc("GET /api/subscription/active", h.ListActiveSubscription)
-	mux.HandleFunc("GET /api/subscription/expired", h.ListExpiredSubscription)
-	mux.HandleFunc("GET /api/subscription/cycle/{billCycle}", h.ListSubscriptionsByBillingCycle)
-	mux.HandleFunc("GET /api/subscription/{id}", h.GetSubscription)
-	mux.HandleFunc("POST /api/subscription", h.CreateSubscription)
-	mux.HandleFunc("PUT /api/subscription/{id}", h.UpdateSubscription)
-	mux.HandleFunc("PUT /api/subscription/{id}/status", h.UpdateSubscriptionStatus)
-	mux.HandleFunc("PUT /api/subscription/{id}/cost", h.UpdateSubscriptionCost)
-	mux.HandleFunc("PATCH /api/subscription/{id}/pause", h.PauseSubscription)
-	mux.HandleFunc("DELETE /api/subscription/{id}", h.DeleteSubscription)
-
 	// Auth (public)
 	mux.HandleFunc("POST /auth/register", h.Register)
 	mux.HandleFunc("POST /auth/login", h.Login)
@@ -49,6 +26,31 @@ func createServer(config *models.AppConfig, port string) *http.Server {
 
 	// Protected routes — all handlers here require a valid Bearer JWT
 	protectedMux := http.NewServeMux()
+
+	// Category
+	protectedMux.HandleFunc("GET /api/category", h.ListCategory)
+	protectedMux.HandleFunc("GET /api/category/id/{id}", h.GetCategoryByID)
+	protectedMux.HandleFunc("GET /api/category/name/{name}", h.GetCategoryByName)
+	protectedMux.HandleFunc("POST /api/category", h.CreateCategory)
+	protectedMux.HandleFunc("PUT /api/category/{id}", h.UpdateCategory)
+	protectedMux.HandleFunc("PUT /api/category/{id}/name", h.UpdateCategoryName)
+	protectedMux.HandleFunc("PUT /api/category/{id}/description", h.UpdateCategoryDescription)
+	protectedMux.HandleFunc("DELETE /api/category/{id}", h.DeleteCategory)
+
+	// Subscriptions
+	protectedMux.HandleFunc("GET /api/subscription", h.ListSubscription)
+	protectedMux.HandleFunc("GET /api/subscription/active", h.ListActiveSubscription)
+	protectedMux.HandleFunc("GET /api/subscription/expired", h.ListExpiredSubscription)
+	protectedMux.HandleFunc("GET /api/subscription/cycle/{billCycle}", h.ListSubscriptionsByBillingCycle)
+	protectedMux.HandleFunc("GET /api/subscription/{id}", h.GetSubscription)
+	protectedMux.HandleFunc("POST /api/subscription", h.CreateSubscription)
+	protectedMux.HandleFunc("PUT /api/subscription/{id}", h.UpdateSubscription)
+	protectedMux.HandleFunc("PUT /api/subscription/{id}/status", h.UpdateSubscriptionStatus)
+	protectedMux.HandleFunc("PUT /api/subscription/{id}/cost", h.UpdateSubscriptionCost)
+	protectedMux.HandleFunc("PATCH /api/subscription/{id}/pause", h.PauseSubscription)
+	protectedMux.HandleFunc("DELETE /api/subscription/{id}", h.DeleteSubscription)
+
+	// User
 	protectedMux.HandleFunc("POST /auth/logout", h.Logout)
 	protectedMux.HandleFunc("GET /api/user/me", h.GetMe)
 	protectedMux.HandleFunc("PUT /api/user/me", h.UpdateMe)
