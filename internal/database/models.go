@@ -16,6 +16,16 @@ type Category struct {
 	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
+type RefreshToken struct {
+	ID        int64      `json:"id"`
+	UserID    int64      `json:"user_id"`
+	TokenHash string     `json:"token_hash"`
+	ExpiresAt time.Time  `json:"expires_at"`
+	Revoked   int64      `json:"revoked"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
 type Subscription struct {
 	ID                 int64      `json:"id"`
 	CategoryID         int64      `json:"category_id"`

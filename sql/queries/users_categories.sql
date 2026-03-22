@@ -41,6 +41,10 @@ INSERT INTO users_categories (
 )
 RETURNING *;
 
+-- name: LinkAllCategoriesToUser :exec
+INSERT OR IGNORE INTO users_categories (user_id, category_id)
+SELECT ?, id FROM categories;
+
 -- name: RemoveCategoryFromUser :exec
 DELETE FROM users_categories
 WHERE user_id = ? AND category_id = ?;

@@ -1,6 +1,16 @@
 ARG GO_VERSION=1.26
 
-FROM golang:${GO_VERSION}-bookworm AS builder
+FROM oven/bun:1 AS ui-builder
+
+WORKDIR /ui
+
+COPY ui/package.json ui/bun.lock* ./
+RUN bun install --frozen-lockfile
+
+COPY ui/ ./
+RUN bun run build
+
+FROM golang:${GO_VERSION}-trixie AS builder
 
 WORKDIR /app
 
@@ -8,9 +18,10 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+COPY --from=ui-builder /ui/dist ./ui/dist
 RUN CGO_ENABLED=1 GOOS=linux go build -o /app/substrack .
 
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 WORKDIR /app
 

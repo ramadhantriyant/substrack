@@ -32,10 +32,12 @@ type Querier interface {
 	CountUsersByCategory(ctx context.Context, categoryID int64) (int64, error)
 	CountUsersBySubscription(ctx context.Context, subscriptionID int64) (int64, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
+	CreateRefreshToken(ctx context.Context, arg CreateRefreshTokenParams) (RefreshToken, error)
 	CreateSubscription(ctx context.Context, arg CreateSubscriptionParams) (Subscription, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteCategory(ctx context.Context, id int64) error
 	DeleteCategoryByName(ctx context.Context, name string) error
+	DeleteExpiredRefreshTokens(ctx context.Context) error
 	DeleteSubscription(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, id int64) error
 	DeleteUserByEmail(ctx context.Context, email string) error
@@ -46,6 +48,7 @@ type Querier interface {
 	GetExpiredSubscriptions(ctx context.Context) ([]Subscription, error)
 	GetModifiedSubscriptions(ctx context.Context, updatedAt *time.Time) ([]Subscription, error)
 	GetRecentSubscriptions(ctx context.Context, createdAt *time.Time) ([]Subscription, error)
+	GetRefreshTokenByHash(ctx context.Context, tokenHash string) (RefreshToken, error)
 	GetSubscription(ctx context.Context, id int64) (Subscription, error)
 	GetSubscriptionStatsByCategory(ctx context.Context) ([]GetSubscriptionStatsByCategoryRow, error)
 	GetSubscriptionWithCategory(ctx context.Context, id int64) (GetSubscriptionWithCategoryRow, error)
@@ -67,6 +70,7 @@ type Querier interface {
 	GetUserUpcomingRenewals(ctx context.Context, arg GetUserUpcomingRenewalsParams) ([]Subscription, error)
 	GetUsersCreatedAfter(ctx context.Context, createdAt *time.Time) ([]User, error)
 	GetUsersUpdatedAfter(ctx context.Context, updatedAt *time.Time) ([]User, error)
+	LinkAllCategoriesToUser(ctx context.Context, userID int64) error
 	ListActiveSubscriptions(ctx context.Context) ([]Subscription, error)
 	ListCategories(ctx context.Context) ([]Category, error)
 	ListCategoriesByUser(ctx context.Context, userID int64) ([]Category, error)
@@ -93,6 +97,8 @@ type Querier interface {
 	RemoveSubscriptionFromUser(ctx context.Context, arg RemoveSubscriptionFromUserParams) error
 	RemoveUserCategory(ctx context.Context, id int64) error
 	RemoveUserSubscription(ctx context.Context, id int64) error
+	RevokeAllUserRefreshTokens(ctx context.Context, userID int64) error
+	RevokeRefreshToken(ctx context.Context, tokenHash string) error
 	SearchCategories(ctx context.Context, arg SearchCategoriesParams) ([]Category, error)
 	SearchSubscriptions(ctx context.Context, arg SearchSubscriptionsParams) ([]Subscription, error)
 	SearchUsers(ctx context.Context, arg SearchUsersParams) ([]User, error)

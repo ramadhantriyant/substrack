@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE INDEX idx_categories_name ON categories(name);
 
 -- Insert default categories
-INSERT INTO categories (id, name, description) VALUES
+INSERT OR IGNORE INTO categories (id, name, description) VALUES
     (1, 'Streaming', 'Video and music streaming services'),
     (2, 'Software', 'Software and SaaS subscriptions'),
     (3, 'Cloud Storage', 'Cloud storage and backup services'),

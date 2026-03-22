@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"embed"
 	"errors"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -14,6 +17,9 @@ import (
 	"git.ramadhantriyant.id/ramadhantriyant/substrack/internal/middlewares"
 	"git.ramadhantriyant.id/ramadhantriyant/substrack/internal/models"
 )
+
+//go:embed all:ui/dist
+var uiFiles embed.FS
 
 func createServer(config *models.AppConfig, port string) *http.Server {
 	mux := http.NewServeMux()
@@ -63,8 +69,32 @@ func createServer(config *models.AppConfig, port string) *http.Server {
 	protectedMux.HandleFunc("POST /api/user/me/category/{id}", h.AddUserCategory)
 	protectedMux.HandleFunc("DELETE /api/user/me/category/{id}", h.RemoveUserCategory)
 
-	// Mount protected mux last so explicit public routes take priority
-	mux.Handle("/", middlewares.RequireAuth(config.JWTSecret)(protectedMux))
+	// Static UI (compiled Svelte from ui/dist), with SPA fallback to index.html
+	staticFS, err := fs.Sub(uiFiles, "ui/dist")
+	if err != nil {
+		log.Fatal("UI must be build first")
+	}
+
+	staticHandler := http.FileServer(http.FS(staticFS))
+	authProtectedHandler := middlewares.RequireAuth(config.JWTSecret)(protectedMux)
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		path := r.URL.Path
+		// Route API and auth-protected paths to the protected mux
+		if strings.HasPrefix(path, "/api/") || path == "/auth/logout" {
+			authProtectedHandler.ServeHTTP(w, r)
+			return
+		}
+		// SPA fallback: serve index.html for any path that isn't a real file
+		name := strings.TrimPrefix(path, "/")
+		if name != "" {
+			if _, err := fs.Stat(staticFS, name); err != nil {
+				http.ServeFileFS(w, r, staticFS, "index.html")
+				return
+			}
+		}
+		staticHandler.ServeHTTP(w, r)
+	})
 
 	handler := middlewares.Chain(mux, middlewares.Logger, middlewares.CORS, middlewares.ShouldJSON)
 	log.Printf("listening to port 0.0.0.0%s", port)

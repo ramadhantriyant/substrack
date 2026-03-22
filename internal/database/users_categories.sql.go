@@ -184,6 +184,16 @@ func (q *Queries) GetUserCategory(ctx context.Context, id int64) (UsersCategory,
 	return i, err
 }
 
+const linkAllCategoriesToUser = `-- name: LinkAllCategoriesToUser :exec
+INSERT OR IGNORE INTO users_categories (user_id, category_id)
+SELECT ?, id FROM categories
+`
+
+func (q *Queries) LinkAllCategoriesToUser(ctx context.Context, userID int64) error {
+	_, err := q.db.ExecContext(ctx, linkAllCategoriesToUser, userID)
+	return err
+}
+
 const listCategoriesByUser = `-- name: ListCategoriesByUser :many
 SELECT c.id, c.name, c.description, c.created_at, c.updated_at
 FROM categories c

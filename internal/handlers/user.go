@@ -54,6 +54,8 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_ = h.config.Queries.LinkAllCategoriesToUser(r.Context(), user.ID)
+
 	if err := utils.WriteJSON(w, http.StatusCreated, models.UserToResponse(user)); err != nil {
 		return
 	}

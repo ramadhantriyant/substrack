@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"git.ramadhantriyant.id/ramadhantriyant/substrack/internal/database"
 	"git.ramadhantriyant.id/ramadhantriyant/substrack/internal/models"
@@ -72,6 +74,11 @@ func (h *Handler) CreateCategory(w http.ResponseWriter, r *http.Request) {
 		Description: &categoryRequest.Description,
 	})
 	if err != nil {
+		log.Printf("CreateCategory error: %v", err)
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			utils.WriteJSONError(w, http.StatusConflict, "category name already exists")
+			return
+		}
 		utils.WriteJSONError(w, http.StatusInternalServerError, "internal server error")
 		return
 	}
