@@ -22,9 +22,7 @@
 	let sortBy = $state<'urgency' | 'amount' | 'name'>('urgency');
 
 	const uid = $derived(
-		typeof authState.user === 'object' && authState.user
-			? (authState.user as User).uid
-			: ''
+		typeof authState.user === 'object' && authState.user ? (authState.user as User).uid : ''
 	);
 
 	const sortedSubs = $derived.by(() => {
@@ -62,7 +60,6 @@
 
 	async function handleSignOut() {
 		await signOut(auth);
-		// eslint-disable-next-line
 		void goto('/login');
 	}
 </script>
@@ -75,7 +72,9 @@
 				<span class="text-[#f59e0b]">◎</span> substrack
 			</span>
 			{#if subsState.dueSoon.length > 0}
-				<span class="flex items-center gap-1.5 rounded-full bg-[#f59e0b]/10 px-2.5 py-1 text-xs font-medium text-[#f59e0b]">
+				<span
+					class="flex items-center gap-1.5 rounded-full bg-[#f59e0b]/10 px-2.5 py-1 text-xs font-medium text-[#f59e0b]"
+				>
 					<span class="pulse-amber h-1.5 w-1.5 rounded-full bg-[#f59e0b]"></span>
 					{subsState.dueSoon.length} due soon
 				</span>
@@ -85,11 +84,13 @@
 			<button
 				onclick={() => (showAddModal = true)}
 				class="rounded-lg bg-[#f59e0b] px-4 py-2 text-sm font-semibold text-[#030712] transition-colors hover:bg-[#d97706]"
-			>+ Add</button>
+				>+ Add</button
+			>
 			<button
 				onclick={handleSignOut}
 				class="rounded-lg border border-[#1e293b] px-4 py-2 text-sm text-[#64748b] transition-colors hover:border-[#334155] hover:text-[#f1f5f9]"
-			>Sign out</button>
+				>Sign out</button
+			>
 		</div>
 	</div>
 </header>
@@ -99,22 +100,30 @@
 	<div class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
 			<p class="text-xs text-[#64748b] sm:text-sm">Monthly Burn</p>
-			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">{formatIDR(subsState.totalMonthly)}</p>
+			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">
+				{formatIDR(subsState.totalMonthly)}
+			</p>
 		</div>
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
 			<p class="text-xs text-[#64748b] sm:text-sm">Annual Spend</p>
-			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">{formatIDR(subsState.totalMonthly * 12)}</p>
+			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">
+				{formatIDR(subsState.totalMonthly * 12)}
+			</p>
 		</div>
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
 			<p class="text-xs text-[#64748b] sm:text-sm">Due This Week</p>
-			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">{subsState.dueSoon.length}</p>
+			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">
+				{subsState.dueSoon.length}
+			</p>
 			{#if subsState.dueSoon.length > 0}
 				<p class="mt-0.5 truncate text-xs text-[#f59e0b]">{subsState.dueSoon[0].name}</p>
 			{/if}
 		</div>
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
 			<p class="text-xs text-[#64748b] sm:text-sm">Active</p>
-			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">{subsState.subscriptions.length}</p>
+			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">
+				{subsState.subscriptions.length}
+			</p>
 		</div>
 	</div>
 
@@ -126,10 +135,11 @@
 				{#each CATEGORIES as cat (cat)}
 					<button
 						onclick={() => (subsState.activeCategory = cat)}
-						class="rounded-full px-3 py-1 text-sm transition-colors {subsState.activeCategory === cat
+						class="rounded-full px-3 py-1 text-sm transition-colors {subsState.activeCategory ===
+						cat
 							? 'bg-[#f59e0b] font-medium text-[#030712]'
-							: 'bg-[#0f172a] text-[#64748b] hover:text-[#f1f5f9]'}"
-					>{cat}</button>
+							: 'bg-[#0f172a] text-[#64748b] hover:text-[#f1f5f9]'}">{cat}</button
+					>
 				{/each}
 			</div>
 
@@ -139,15 +149,19 @@
 				{#each [['urgency', 'Urgency'], ['amount', 'Amount'], ['name', 'Name']] as [val, label] (val)}
 					<button
 						onclick={() => (sortBy = val as typeof sortBy)}
-						class="text-sm transition-colors {sortBy === val ? 'font-medium text-[#f59e0b]' : 'text-[#64748b] hover:text-[#f1f5f9]'}"
-					>{label}</button>
+						class="text-sm transition-colors {sortBy === val
+							? 'font-medium text-[#f59e0b]'
+							: 'text-[#64748b] hover:text-[#f1f5f9]'}">{label}</button
+					>
 				{/each}
 			</div>
 
 			<!-- Subscription list -->
 			{#if subsState.subsLoading}
 				<div class="flex items-center justify-center py-20">
-					<div class="h-7 w-7 animate-spin rounded-full border-2 border-[#f59e0b] border-t-transparent"></div>
+					<div
+						class="h-7 w-7 animate-spin rounded-full border-2 border-[#f59e0b] border-t-transparent"
+					></div>
 				</div>
 			{:else if sortedSubs.length === 0}
 				<div class="flex flex-col items-center justify-center py-20 text-center">
@@ -156,7 +170,8 @@
 					<button
 						onclick={() => (showAddModal = true)}
 						class="mt-4 rounded-lg bg-[#f59e0b]/10 px-4 py-2 text-sm text-[#f59e0b] transition-colors hover:bg-[#f59e0b]/20"
-					>Add your first subscription</button>
+						>Add your first subscription</button
+					>
 				</div>
 			{:else}
 				<div class="space-y-3">
@@ -174,8 +189,10 @@
 										<span class="font-medium text-[#f1f5f9]">{sub.name}</span>
 										<span
 											class="rounded px-1.5 py-0.5 text-xs"
-											style="background: {CATEGORY_COLORS[sub.category]}22; color: {CATEGORY_COLORS[sub.category]}"
-										>{sub.category}</span>
+											style="background: {CATEGORY_COLORS[sub.category]}22; color: {CATEGORY_COLORS[
+												sub.category
+											]}">{sub.category}</span
+										>
 									</div>
 									<div class="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-[#64748b]">
 										<span>{sub.cycle}</span>
@@ -187,18 +204,28 @@
 									<div>
 										<p class="font-mono font-medium text-[#f1f5f9]">{formatIDR(sub.amount)}</p>
 										{#if sub.cycle !== 'Monthly'}
-											<p class="font-mono text-xs text-[#64748b]">{formatIDR(toMonthly(sub.amount, sub.cycle))}/mo</p>
+											<p class="font-mono text-xs text-[#64748b]">
+												{formatIDR(toMonthly(sub.amount, sub.cycle))}/mo
+											</p>
 										{/if}
 									</div>
 									<span
 										class="rounded-full px-2 py-0.5 text-xs"
-										style="background: {badge.color}22; color: {badge.text}"
-									>{badge.label}</span>
+										style="background: {badge.color}22; color: {badge.text}">{badge.label}</span
+									>
 									<button
 										onclick={() => handleDelete(sub.id)}
 										aria-label="Delete {sub.name}"
-										class="text-sm text-[#64748b] opacity-0 transition-all hover:text-red-400 group-hover:opacity-100"
-									>Delete</button>
+										class="text-[#64748b] opacity-0 transition-all group-hover:opacity-100 hover:text-red-400"
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M3 6h18" />
+											<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+											<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+											<line x1="10" y1="11" x2="10" y2="17" />
+											<line x1="14" y1="11" x2="14" y2="17" />
+										</svg>
+									</button>
 								</div>
 							</div>
 						</div>
@@ -226,8 +253,8 @@
 								</div>
 								<span
 									class="flex-shrink-0 rounded-full px-2 py-0.5 text-xs"
-									style="background: {badge.color}22; color: {badge.text}"
-								>{badge.label}</span>
+									style="background: {badge.color}22; color: {badge.text}">{badge.label}</span
+								>
 							</div>
 						{/each}
 					</div>

@@ -5,14 +5,44 @@
 	let { onClose, uid }: { onClose: () => void; uid: string } = $props();
 
 	const ICONS = [
-		'📱', '🎬', '🎵', '📺', '🎮', '💻', '☁️', '📧',
-		'🔒', '💪', '🏥', '💳', '📊', '🛡️', '🌐', '📰',
-		'🎨', '📚', '🎯', '⚡', '🎙️', '🎧', '✈️', '🏠'
+		'📱',
+		'🎬',
+		'🎵',
+		'📺',
+		'🎮',
+		'💻',
+		'☁️',
+		'📧',
+		'🔒',
+		'💪',
+		'🏥',
+		'💳',
+		'📊',
+		'🛡️',
+		'🌐',
+		'📰',
+		'🎨',
+		'📚',
+		'🎯',
+		'⚡',
+		'🎙️',
+		'🎧',
+		'✈️',
+		'🏠'
 	];
 	const COLORS = [
-		'#f59e0b', '#6366f1', '#10b981', '#ec4899',
-		'#3b82f6', '#8b5cf6', '#ef4444', '#14b8a6',
-		'#f97316', '#84cc16', '#06b6d4', '#d946ef'
+		'#f59e0b',
+		'#6366f1',
+		'#10b981',
+		'#ec4899',
+		'#3b82f6',
+		'#8b5cf6',
+		'#ef4444',
+		'#14b8a6',
+		'#f97316',
+		'#84cc16',
+		'#06b6d4',
+		'#d946ef'
 	];
 
 	let name = $state('');
@@ -26,9 +56,18 @@
 	let submitting = $state(false);
 
 	async function handleSubmit() {
-		if (!name.trim()) { error = 'Name is required'; return; }
-		if (!amount || Number(amount) <= 0) { error = 'Amount must be greater than 0'; return; }
-		if (!nextBilling) { error = 'Next billing date is required'; return; }
+		if (!name.trim()) {
+			error = 'Name is required';
+			return;
+		}
+		if (!amount || Number(amount) <= 0) {
+			error = 'Amount must be greater than 0';
+			return;
+		}
+		if (!nextBilling) {
+			error = 'Next billing date is required';
+			return;
+		}
 		error = '';
 		submitting = true;
 		try {
@@ -73,11 +112,17 @@
 			<button
 				onclick={onClose}
 				aria-label="Close"
-				class="text-xl leading-none text-[#64748b] transition-colors hover:text-[#f1f5f9]"
-			>×</button>
+				class="text-xl leading-none text-[#64748b] transition-colors hover:text-[#f1f5f9]">×</button
+			>
 		</div>
 
-		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-4">
+		<form
+			onsubmit={(e) => {
+				e.preventDefault();
+				handleSubmit();
+			}}
+			class="space-y-4"
+		>
 			<div>
 				<label for="sub-name" class="mb-1 block text-sm text-[#64748b]">Service Name</label>
 				<input
@@ -85,7 +130,7 @@
 					type="text"
 					bind:value={name}
 					placeholder="Netflix, Spotify..."
-					class="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 text-[#f1f5f9] placeholder:text-[#334155] transition-colors focus:border-[#f59e0b] focus:outline-none"
+					class="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 text-[#f1f5f9] transition-colors placeholder:text-[#334155] focus:border-[#f59e0b] focus:outline-none"
 				/>
 			</div>
 
@@ -98,7 +143,7 @@
 						bind:value={amount}
 						placeholder="50000"
 						min="0"
-						class="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 font-mono text-[#f1f5f9] placeholder:text-[#334155] transition-colors focus:border-[#f59e0b] focus:outline-none"
+						class="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 font-mono text-[#f1f5f9] transition-colors placeholder:text-[#334155] focus:border-[#f59e0b] focus:outline-none"
 					/>
 				</div>
 				<div>
@@ -137,7 +182,7 @@
 					id="sub-billing"
 					type="date"
 					bind:value={nextBilling}
-					class="scheme-dark w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 text-[#f1f5f9] transition-colors focus:border-[#f59e0b] focus:outline-none"
+					class="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 text-[#f1f5f9] scheme-dark transition-colors focus:border-[#f59e0b] focus:outline-none"
 				/>
 			</div>
 
@@ -147,11 +192,14 @@
 					{#each ICONS as ic (ic)}
 						<button
 							type="button"
-							onclick={() => icon = ic}
+							onclick={() => (icon = ic)}
 							aria-label="Select icon {ic}"
 							aria-pressed={icon === ic}
-							class="flex h-8 w-8 items-center justify-center rounded-lg text-base transition-colors {icon === ic ? 'bg-[#f59e0b]/20 ring-1 ring-[#f59e0b]' : 'hover:bg-[#1e293b]'}"
-						>{ic}</button>
+							class="flex h-8 w-8 items-center justify-center rounded-lg text-base transition-colors {icon ===
+							ic
+								? 'bg-[#f59e0b]/20 ring-1 ring-[#f59e0b]'
+								: 'hover:bg-[#1e293b]'}">{ic}</button
+						>
 					{/each}
 				</div>
 			</div>
@@ -162,10 +210,12 @@
 					{#each COLORS as c (c)}
 						<button
 							type="button"
-							onclick={() => color = c}
+							onclick={() => (color = c)}
 							aria-label="Select color {c}"
 							aria-pressed={color === c}
-							class="h-6 w-6 rounded-full transition-transform {color === c ? 'scale-125 ring-2 ring-white/50' : 'hover:scale-110'}"
+							class="h-6 w-6 rounded-full transition-transform {color === c
+								? 'scale-125 ring-2 ring-white/50'
+								: 'hover:scale-110'}"
 							style="background-color: {c}"
 						></button>
 					{/each}
@@ -181,12 +231,14 @@
 					type="button"
 					onclick={onClose}
 					class="flex-1 rounded-lg border border-[#1e293b] py-2 text-[#64748b] transition-colors hover:border-[#334155] hover:text-[#f1f5f9]"
-				>Cancel</button>
+					>Cancel</button
+				>
 				<button
 					type="submit"
 					disabled={submitting}
 					class="flex-1 rounded-lg bg-[#f59e0b] py-2 font-semibold text-[#030712] transition-colors hover:bg-[#d97706] disabled:cursor-not-allowed disabled:opacity-50"
-				>{submitting ? 'Adding...' : 'Add Subscription'}</button>
+					>{submitting ? 'Adding...' : 'Add Subscription'}</button
+				>
 			</div>
 		</form>
 	</div>

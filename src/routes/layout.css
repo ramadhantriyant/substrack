@@ -13,6 +13,10 @@ body {
 	font-family: var(--font-sans);
 }
 
+button {
+	cursor: pointer;
+}
+
 @keyframes fadeInUp {
 	from {
 		opacity: 0;

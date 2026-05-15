@@ -13,7 +13,6 @@
 		if (u === null) return;
 		if (u === false) {
 			subsState.stopListener();
-			// eslint-disable-next-line
 			if (page.route.id !== '/login') void goto('/login');
 		} else {
 			subsState.startListener(u);
@@ -25,7 +24,9 @@
 
 {#if authState.user === null}
 	<div class="flex h-screen items-center justify-center bg-[#030712]">
-		<div class="h-8 w-8 animate-spin rounded-full border-2 border-[#f59e0b] border-t-transparent"></div>
+		<div
+			class="h-8 w-8 animate-spin rounded-full border-2 border-[#f59e0b] border-t-transparent"
+		></div>
 	</div>
 {:else}
 	{@render children()}
