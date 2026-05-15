@@ -235,7 +235,7 @@
 		</div>
 
 		<!-- Sidebars -->
-		<div class="flex flex-col gap-4 lg:w-72 lg:flex-shrink-0">
+		<div class="flex flex-col gap-4 lg:w-72 lg:shrink-0">
 			<!-- Due Soon -->
 			<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4">
 				<h3 class="mb-3 text-sm font-semibold text-[#f1f5f9]">Due Soon</h3>
@@ -252,7 +252,7 @@
 									<p class="font-mono text-xs text-[#64748b]">{formatIDR(sub.amount)}</p>
 								</div>
 								<span
-									class="flex-shrink-0 rounded-full px-2 py-0.5 text-xs"
+									class="shrink-0 rounded-full px-2 py-0.5 text-xs"
 									style="background: {badge.color}22; color: {badge.text}">{badge.label}</span
 								>
 							</div>
