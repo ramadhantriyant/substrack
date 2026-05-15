@@ -1,42 +1,63 @@
-# sv
+# substrack
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A subscription tracker SPA — track every subscription, miss nothing.
 
-## Creating a project
+Built with SvelteKit 5 (runes), Firebase, Tailwind CSS v4, and deployed on Cloudflare Workers.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Stack
 
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-bun x sv@0.15.3 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:typography,forms" sveltekit-adapter="adapter:cloudflare+cfTarget:workers" --install bun substrack
-```
+- **Frontend**: SvelteKit 5 (Svelte runes), Tailwind CSS v4, DM Sans / DM Mono
+- **Auth**: Firebase Authentication (Google Sign-In)
+- **Database**: Cloud Firestore (real-time listener)
+- **Deployment**: Cloudflare Workers via `@sveltejs/adapter-cloudflare`
+- **Runtime**: Bun
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Copy the environment file and fill in your Firebase credentials:
 
 ```sh
-npm run dev
+cp .env.example .env.local
+```
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+Install dependencies and start the dev server:
+
+```sh
+bun install
+bun run dev
 ```
 
 ## Building
 
-To create a production version of your app:
-
 ```sh
-npm run build
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+## Deploying
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Authenticate with Cloudflare (one-time):
+
+```sh
+wrangler login
+```
+
+Build and deploy:
+
+```sh
+bun run deploy
+```
+
+After the first deploy, add your `*.workers.dev` domain to **Firebase Console → Authentication → Settings → Authorized domains** so Google Sign-In works in production.
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `VITE_FIREBASE_API_KEY` | Firebase API key |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+| `VITE_FIREBASE_PROJECT_ID` | Firestore project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
+| `VITE_FIREBASE_APP_ID` | Firebase app ID |
+
+These are baked into the bundle at build time from `.env.local` (gitignored).
