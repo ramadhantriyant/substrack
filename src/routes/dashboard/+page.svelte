@@ -6,6 +6,8 @@
 	import { goto } from '$app/navigation';
 	import { formatIDR, toMonthly, getDaysUntil } from '$lib/utils';
 	import AddModal from '$lib/components/AddModal.svelte';
+	import EditModal from '$lib/components/EditModal.svelte';
+	import type { Subscription } from '$lib/types';
 	import type { User } from 'firebase/auth';
 
 	const CATEGORIES = ['All', 'Entertainment', 'SaaS', 'Utilities', 'Health', 'Finance', 'Other'];
@@ -19,6 +21,7 @@
 	};
 
 	let showAddModal = $state(false);
+	let editingSub = $state<Subscription | null>(null);
 	let sortBy = $state<'urgency' | 'amount' | 'name'>('urgency');
 
 	const uid = $derived(
@@ -213,19 +216,31 @@
 										class="rounded-full px-2 py-0.5 text-xs"
 										style="background: {badge.color}22; color: {badge.text}">{badge.label}</span
 									>
-									<button
-										onclick={() => handleDelete(sub.id)}
-										aria-label="Delete {sub.name}"
-										class="text-[#64748b] opacity-0 transition-all group-hover:opacity-100 hover:text-red-400"
-									>
-										<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-											<path d="M3 6h18" />
-											<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-											<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-											<line x1="10" y1="11" x2="10" y2="17" />
-											<line x1="14" y1="11" x2="14" y2="17" />
-										</svg>
-									</button>
+									<div class="flex gap-2 opacity-0 transition-all group-hover:opacity-100">
+										<button
+											onclick={() => (editingSub = sub)}
+											aria-label="Edit {sub.name}"
+											class="text-[#64748b] hover:text-[#f59e0b]"
+										>
+											<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+												<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+											</svg>
+										</button>
+										<button
+											onclick={() => handleDelete(sub.id)}
+											aria-label="Delete {sub.name}"
+											class="text-[#64748b] hover:text-red-400"
+										>
+											<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+												<path d="M3 6h18" />
+												<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+												<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+												<line x1="10" y1="11" x2="10" y2="17" />
+												<line x1="14" y1="11" x2="14" y2="17" />
+											</svg>
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -291,4 +306,8 @@
 
 {#if showAddModal}
 	<AddModal onClose={() => (showAddModal = false)} {uid} />
+{/if}
+
+{#if editingSub}
+	<EditModal onClose={() => (editingSub = null)} {uid} subscription={editingSub} />
 {/if}
