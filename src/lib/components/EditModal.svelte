@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { subsState } from '$lib/stores/subscriptions.svelte';
 	import type { Subscription } from '$lib/types';
 
@@ -7,6 +8,16 @@
 		uid,
 		subscription
 	}: { onClose: () => void; uid: string; subscription: Subscription } = $props();
+
+	const {
+		name: initialName,
+		amount: initialAmount,
+		cycle: initialCycle,
+		category: initialCategory,
+		nextBilling: initialNextBilling,
+		icon: initialIcon,
+		color: initialColor
+	} = untrack(() => subscription);
 
 	const ICONS = [
 		'📱',
@@ -49,13 +60,13 @@
 		'#d946ef'
 	];
 
-	let name = $state(subscription.name);
-	let amount = $state(String(subscription.amount));
-	let cycle = $state<Subscription['cycle']>(subscription.cycle);
-	let category = $state<Subscription['category']>(subscription.category);
-	let nextBilling = $state(subscription.nextBilling);
-	let icon = $state(subscription.icon);
-	let color = $state(subscription.color);
+	let name = $state(initialName);
+	let amount = $state(String(initialAmount));
+	let cycle = $state<Subscription['cycle']>(initialCycle);
+	let category = $state<Subscription['category']>(initialCategory);
+	let nextBilling = $state(initialNextBilling);
+	let icon = $state(initialIcon);
+	let color = $state(initialColor);
 	let error = $state('');
 	let submitting = $state(false);
 
@@ -181,8 +192,7 @@
 			</div>
 
 			<div>
-				<label for="edit-billing" class="mb-1 block text-sm text-[#64748b]"
-					>Next Billing Date</label
+				<label for="edit-billing" class="mb-1 block text-sm text-[#64748b]">Next Billing Date</label
 				>
 				<input
 					id="edit-billing"

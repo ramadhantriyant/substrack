@@ -51,13 +51,13 @@ After the first deploy, add your `*.workers.dev` domain to **Firebase Console â†
 
 ## Environment Variables
 
-| Variable | Description |
-|---|---|
-| `VITE_FIREBASE_API_KEY` | Firebase API key |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
-| `VITE_FIREBASE_PROJECT_ID` | Firestore project ID |
-| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| Variable                            | Description                  |
+| ----------------------------------- | ---------------------------- |
+| `VITE_FIREBASE_API_KEY`             | Firebase API key             |
+| `VITE_FIREBASE_AUTH_DOMAIN`         | Firebase auth domain         |
+| `VITE_FIREBASE_PROJECT_ID`          | Firestore project ID         |
+| `VITE_FIREBASE_STORAGE_BUCKET`      | Firebase storage bucket      |
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
-| `VITE_FIREBASE_APP_ID` | Firebase app ID |
+| `VITE_FIREBASE_APP_ID`              | Firebase app ID              |
 
 These are baked into the bundle at build time from `.env.local` (gitignored).
