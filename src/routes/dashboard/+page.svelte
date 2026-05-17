@@ -4,7 +4,8 @@
 	import { signOut } from 'firebase/auth';
 	import { auth } from '$lib/firebase';
 	import { goto } from '$app/navigation';
-	import { formatIDR, toMonthly, getDaysUntil } from '$lib/utils';
+	import { formatIDR, formatCurrency, toMonthly, getDaysUntil } from '$lib/utils';
+	import { ratesState } from '$lib/stores/rates.svelte';
 	import AddModal from '$lib/components/AddModal.svelte';
 	import EditModal from '$lib/components/EditModal.svelte';
 	import type { Subscription } from '$lib/types';
@@ -28,24 +29,36 @@
 		typeof authState.user === 'object' && authState.user ? (authState.user as User).uid : ''
 	);
 
+	const totalMonthlyIDR = $derived(
+		subsState.subscriptions.reduce(
+			(sum, s) => sum + toMonthly(s.amount, s.cycle, s.currency, ratesState.rates),
+			0
+		)
+	);
+
 	const sortedSubs = $derived.by(() => {
 		const subs = [...subsState.filteredSubs];
 		if (sortBy === 'urgency')
 			return subs.sort((a, b) => getDaysUntil(a.nextBilling) - getDaysUntil(b.nextBilling));
 		if (sortBy === 'amount')
-			return subs.sort((a, b) => toMonthly(b.amount, b.cycle) - toMonthly(a.amount, a.cycle));
+			return subs.sort(
+				(a, b) =>
+					toMonthly(b.amount, b.cycle, b.currency, ratesState.rates) -
+					toMonthly(a.amount, a.cycle, a.currency, ratesState.rates)
+			);
 		return subs.sort((a, b) => a.name.localeCompare(b.name));
 	});
 
 	const categoryBreakdown = $derived.by(() => {
-		const total = subsState.totalMonthly;
-		if (total === 0) return [];
+		if (totalMonthlyIDR === 0) return [];
 		const groups: Record<string, number> = {};
 		for (const sub of subsState.subscriptions) {
-			groups[sub.category] = (groups[sub.category] ?? 0) + toMonthly(sub.amount, sub.cycle);
+			groups[sub.category] =
+				(groups[sub.category] ?? 0) +
+				toMonthly(sub.amount, sub.cycle, sub.currency, ratesState.rates);
 		}
 		return Object.entries(groups)
-			.map(([cat, amount]) => ({ cat, amount, pct: (amount / total) * 100 }))
+			.map(([cat, amount]) => ({ cat, amount, pct: (amount / totalMonthlyIDR) * 100 }))
 			.sort((a, b) => b.amount - a.amount);
 	});
 
@@ -104,13 +117,13 @@
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
 			<p class="text-xs text-[#64748b] sm:text-sm">Monthly Burn</p>
 			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">
-				{formatIDR(subsState.totalMonthly)}
+				{formatIDR(totalMonthlyIDR)}
 			</p>
 		</div>
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
 			<p class="text-xs text-[#64748b] sm:text-sm">Annual Spend</p>
 			<p class="mt-1 font-mono text-lg font-semibold text-[#f1f5f9] sm:text-2xl">
-				{formatIDR(subsState.totalMonthly * 12)}
+				{formatIDR(totalMonthlyIDR * 12)}
 			</p>
 		</div>
 		<div class="rounded-xl border border-[#1e293b] bg-[#0a0f1e] p-4 lg:p-5">
@@ -205,10 +218,12 @@
 								</div>
 								<div class="flex flex-col items-end gap-2 text-right">
 									<div>
-										<p class="font-mono font-medium text-[#f1f5f9]">{formatIDR(sub.amount)}</p>
-										{#if sub.cycle !== 'Monthly'}
+										<p class="font-mono font-medium text-[#f1f5f9]">
+											{formatCurrency(sub.amount, sub.currency ?? 'IDR')}
+										</p>
+										{#if sub.cycle !== 'Monthly' || (sub.currency && sub.currency !== 'IDR')}
 											<p class="font-mono text-xs text-[#64748b]">
-												{formatIDR(toMonthly(sub.amount, sub.cycle))}/mo
+												{formatIDR(toMonthly(sub.amount, sub.cycle, sub.currency, ratesState.rates))}/mo
 											</p>
 										{/if}
 									</div>
@@ -284,7 +299,9 @@
 								<span class="text-xl">{sub.icon}</span>
 								<div class="min-w-0 flex-1">
 									<p class="truncate text-sm font-medium text-[#f1f5f9]">{sub.name}</p>
-									<p class="font-mono text-xs text-[#64748b]">{formatIDR(sub.amount)}</p>
+									<p class="font-mono text-xs text-[#64748b]">
+							{formatCurrency(sub.amount, sub.currency ?? 'IDR')}
+						</p>
 								</div>
 								<span
 									class="shrink-0 rounded-full px-2 py-0.5 text-xs"

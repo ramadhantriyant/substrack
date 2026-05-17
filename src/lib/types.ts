@@ -7,5 +7,6 @@ export interface Subscription {
 	nextBilling: string; // ISO date string YYYY-MM-DD
 	icon: string;
 	color: string;
+	currency?: string; // ISO 4217, e.g. 'USD'. Omitted/undefined → 'IDR'
 	createdAt?: string;
 }

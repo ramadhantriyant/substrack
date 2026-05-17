@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { subsState } from '$lib/stores/subscriptions.svelte';
+	import { SUPPORTED_CURRENCIES } from '$lib/stores/rates.svelte';
 	import type { Subscription } from '$lib/types';
 
 	let { onClose, uid }: { onClose: () => void; uid: string } = $props();
@@ -47,6 +48,7 @@
 
 	let name = $state('');
 	let amount = $state('');
+	let currency = $state('IDR');
 	let cycle = $state<Subscription['cycle']>('Monthly');
 	let category = $state<Subscription['category']>('Other');
 	let nextBilling = $state('');
@@ -74,6 +76,7 @@
 			await subsState.add(uid, {
 				name: name.trim(),
 				amount: Number(amount),
+				currency,
 				cycle,
 				category,
 				nextBilling,
@@ -136,15 +139,26 @@
 
 			<div class="grid grid-cols-2 gap-3">
 				<div>
-					<label for="sub-amount" class="mb-1 block text-sm text-[#64748b]">Amount (IDR)</label>
-					<input
-						id="sub-amount"
-						type="number"
-						bind:value={amount}
-						placeholder="50000"
-						min="0"
-						class="w-full rounded-lg border border-[#1e293b] bg-[#0f172a] px-3 py-2 font-mono text-[#f1f5f9] transition-colors placeholder:text-[#334155] focus:border-[#f59e0b] focus:outline-none"
-					/>
+					<label for="sub-amount" class="mb-1 block text-sm text-[#64748b]">Amount</label>
+					<div class="flex">
+						<input
+							id="sub-amount"
+							type="number"
+							bind:value={amount}
+							placeholder="0"
+							min="0"
+							class="min-w-0 flex-1 rounded-l-lg border border-r-0 border-[#1e293b] bg-[#0f172a] px-3 py-2 font-mono text-[#f1f5f9] transition-colors placeholder:text-[#334155] focus:border-[#f59e0b] focus:outline-none"
+						/>
+						<select
+							bind:value={currency}
+							aria-label="Currency"
+							class="rounded-r-lg border border-[#1e293b] bg-[#0f172a] px-2 py-2 text-xs text-[#f1f5f9] transition-colors focus:border-[#f59e0b] focus:outline-none"
+						>
+							{#each SUPPORTED_CURRENCIES as c (c)}
+								<option value={c}>{c}</option>
+							{/each}
+						</select>
+					</div>
 				</div>
 				<div>
 					<label for="sub-cycle" class="mb-1 block text-sm text-[#64748b]">Cycle</label>

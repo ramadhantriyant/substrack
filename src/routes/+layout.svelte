@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { authState } from '$lib/stores/auth.svelte';
 	import { subsState } from '$lib/stores/subscriptions.svelte';
+	import { ratesState } from '$lib/stores/rates.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -17,6 +18,12 @@
 		} else {
 			subsState.startListener(u);
 		}
+	});
+
+	$effect(() => {
+		void ratesState.fetch();
+		const id = setInterval(() => void ratesState.fetch(), 3 * 60 * 60 * 1000);
+		return () => clearInterval(id);
 	});
 </script>
 
