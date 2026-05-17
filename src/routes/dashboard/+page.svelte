@@ -223,7 +223,9 @@
 										</p>
 										{#if sub.cycle !== 'Monthly' || (sub.currency && sub.currency !== 'IDR')}
 											<p class="font-mono text-xs text-[#64748b]">
-												{formatIDR(toMonthly(sub.amount, sub.cycle, sub.currency, ratesState.rates))}/mo
+												{formatIDR(
+													toMonthly(sub.amount, sub.cycle, sub.currency, ratesState.rates)
+												)}/mo
 											</p>
 										{/if}
 									</div>
@@ -231,7 +233,7 @@
 										class="rounded-full px-2 py-0.5 text-xs"
 										style="background: {badge.color}22; color: {badge.text}">{badge.label}</span
 									>
-								<div class="flex gap-2 opacity-0 transition-all group-hover:opacity-100">
+									<div class="flex gap-2 opacity-0 transition-all group-hover:opacity-100">
 										<button
 											onclick={() => (editingSub = sub)}
 											aria-label="Edit {sub.name}"
@@ -300,8 +302,8 @@
 								<div class="min-w-0 flex-1">
 									<p class="truncate text-sm font-medium text-[#f1f5f9]">{sub.name}</p>
 									<p class="font-mono text-xs text-[#64748b]">
-							{formatCurrency(sub.amount, sub.currency ?? 'IDR')}
-						</p>
+										{formatCurrency(sub.amount, sub.currency ?? 'IDR')}
+									</p>
 								</div>
 								<span
 									class="shrink-0 rounded-full px-2 py-0.5 text-xs"

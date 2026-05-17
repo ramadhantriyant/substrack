@@ -3,7 +3,17 @@ const CACHE_RATES = 'substrack_rates';
 const CACHE_EXPIRY = 'substrack_rates_expiry';
 const TTL_MS = 3 * 60 * 60 * 1000;
 
-export const SUPPORTED_CURRENCIES = ['IDR', 'USD', 'EUR', 'GBP', 'SGD', 'JPY', 'AUD', 'CAD', 'MYR'] as const;
+export const SUPPORTED_CURRENCIES = [
+	'IDR',
+	'USD',
+	'EUR',
+	'GBP',
+	'SGD',
+	'JPY',
+	'AUD',
+	'CAD',
+	'MYR'
+] as const;
 
 class RatesState {
 	rates = $state<Record<string, number>>({});
