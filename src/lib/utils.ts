@@ -38,7 +38,7 @@ export function toMonthly(
 	rates: Record<string, number> = {}
 ): number {
 	const amountIDR = currency === 'IDR' || !rates[currency] ? amount : amount / rates[currency];
-	if (cycle === 'Weekly') return (amountIDR * 52) / 12;
+	if (cycle === 'Quarterly') return amountIDR / 3;
 	if (cycle === 'Yearly') return amountIDR / 12;
 	return amountIDR;
 }

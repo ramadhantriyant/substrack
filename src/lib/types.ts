@@ -3,7 +3,7 @@ export interface Subscription {
 	name: string;
 	category: 'Entertainment' | 'SaaS' | 'Utilities' | 'Health' | 'Finance' | 'Other';
 	amount: number;
-	cycle: 'Monthly' | 'Yearly' | 'Weekly';
+	cycle: 'Monthly' | 'Yearly' | 'Quarterly';
 	nextBilling: string; // ISO date string YYYY-MM-DD
 	icon: string;
 	color: string;
