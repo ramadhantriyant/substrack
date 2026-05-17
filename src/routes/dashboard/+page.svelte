@@ -216,7 +216,7 @@
 										class="rounded-full px-2 py-0.5 text-xs"
 										style="background: {badge.color}22; color: {badge.text}">{badge.label}</span
 									>
-									<div class="flex gap-2 opacity-0 transition-all group-hover:opacity-100">
+								<div class="flex gap-2 opacity-0 transition-all group-hover:opacity-100">
 										<button
 											onclick={() => (editingSub = sub)}
 											aria-label="Edit {sub.name}"
